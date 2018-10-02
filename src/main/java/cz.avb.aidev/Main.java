@@ -2,7 +2,6 @@ package cz.avb.aidev;
 
 
 import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.SlickException;
 
 public class Main {

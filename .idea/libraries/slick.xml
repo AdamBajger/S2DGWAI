@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="slick">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../Programy/slick/lib/slick.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/main/java/lib/slick.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="lwjgl">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../Programy/slick/lib/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/main/java/lib/lwjgl.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

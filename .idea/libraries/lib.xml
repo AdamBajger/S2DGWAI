@@ -1,9 +1,9 @@
 <component name="libraryTable">
-  <library name="natives">
+  <library name="lib">
     <CLASSES />
     <JAVADOC />
     <NATIVE>
-      <root url="file://$PROJECT_DIR$/../../Programy/slick" />
+      <root url="file://$PROJECT_DIR$/src/main/java/lib" />
     </NATIVE>
     <SOURCES />
   </library>
