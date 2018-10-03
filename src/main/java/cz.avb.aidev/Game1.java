@@ -41,11 +41,13 @@ public class Game1 extends BasicGame {
 
     @Override
     public void update(GameContainer gameContainer, int i) throws SlickException {
-
+        if (false) {}
     }
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
         map.render(0, 0);
+
     }
+
 }
