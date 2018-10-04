@@ -11,6 +11,8 @@ public class Main {
         try {
             AppGameContainer container = new AppGameContainer(game);
             container.start();
+
+
         } catch (SlickException e) {
             e.printStackTrace();
         }
