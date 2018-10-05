@@ -8,7 +8,11 @@ import static java.lang.StrictMath.sqrt;
 
 /**
  * TODO: Extract interface for living cell (metabolic processes, food ingestion, energy regen, fat circulation, etc)
+ * TODO: Add modifiers to pushDirection methods ---> ideally a cell is able to move any fast, but more costly
+ * ---> depends on strength/agility
+ *
  * Represents an example of a cell. Not perfect, not bad either. Just an example...
+ *
  */
 public class ExampleCell implements MovableEntity {
     private double x;
