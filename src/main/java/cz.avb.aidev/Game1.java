@@ -64,7 +64,7 @@ public class Game1 extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         map = new TiledMap("src/main/resources/Game1map01.tmx");
 
-        exampleCell = new ExampleCell(44f, 21f, 3.5, 5.917, 4.8779, 11.000235, 50.054);
+        exampleCell = new ExampleCell(44f, 21f, 3.5, 5, 5, 11, 50);
         entities.add(exampleCell);
 
 

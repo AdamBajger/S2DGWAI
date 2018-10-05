@@ -147,6 +147,11 @@ public interface MovableEntity extends Entity {
         accelerateByY(getBaseAccelerationForce() * cos(getFacing()));
     }
 
+    /**
+     * Naturally decelerates based on friction due to object movement.
+     * If the deceleration amount is greater that actual speed, entity is stopped
+     * @param environmentDensity the density of the environment the entity resides in
+     */
     default void decelerateNaturally(double environmentDensity) {
         double frictionDecelerationX = getCurrentFrictionX(environmentDensity)/getMass(); // relative to mass and 1 tick
         double frictionDecelerationY = getCurrentFrictionY(environmentDensity)/getMass(); // relative to mass and 1 tick
