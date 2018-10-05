@@ -124,7 +124,7 @@ public class ExampleCell implements MovableEntity {
 
     @Override
     public double getBaseAccelerationForce() {
-        return (strength + sqrt(agility)) * 10e-9d;
+        return (strength + sqrt(agility)) * 10e-9d * 10e-2d; // 9 for the nanoNewtons, 2 just to decrease minimum speed
     }
 
     @Override

@@ -96,7 +96,16 @@ public interface MovableEntity extends Entity {
         return sqrt(pow(getCurrentFrictionX(environmentDensity), 2) + pow(getCurrentFrictionY(environmentDensity), 2) );
     }
 
+    /**
+     * Modifies speed in direction X by a given value by addition
+     * @param x value to add to speed
+     */
     void accelerateByX(double x);
+
+    /**
+     * Modifies speed in direction Y by a given value by addition
+     * @param y value to add to the speed
+     */
     void accelerateByY(double y);
 
 
@@ -131,6 +140,7 @@ public interface MovableEntity extends Entity {
 
     /**
      * TODO: test that this works
+     * TODO: implement rotation and so on
      */
     default void accelerateForward() {
         accelerateByX(getBaseAccelerationForce() * sin(getFacing()));
