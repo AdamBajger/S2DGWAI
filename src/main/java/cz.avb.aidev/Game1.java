@@ -4,6 +4,7 @@ package cz.avb.aidev;
 import cz.avb.aidev.entities.ExampleCell;
 import cz.avb.aidev.entities.Entity;
 import cz.avb.aidev.entities.MovableEntity;
+import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.*;
 import org.newdawn.slick.tiled.TiledMap;
 
@@ -63,7 +64,7 @@ public class Game1 extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         map = new TiledMap("src/main/resources/Game1map01.tmx");
 
-        exampleCell = new ExampleCell(44f, 21f, 3.5, 5.917, 4.8779, 11.000235, 5.054);
+        exampleCell = new ExampleCell(44f, 21f, 3.5, 5.917, 4.8779, 11.000235, 50.054);
         entities.add(exampleCell);
 
 
@@ -77,22 +78,57 @@ public class Game1 extends BasicGame {
         slowDown();
 
 
-        // pressed controlls actions
 
+
+        // pressed controlls actions
+        if (gc.getInput().isKeyDown(Keyboard.KEY_UP)) {
+            exampleCell.pushUp();
+        }
+        if (gc.getInput().isKeyDown(Keyboard.KEY_DOWN)) {
+            exampleCell.pushDown();
+        }
+        if (gc.getInput().isKeyDown(Keyboard.KEY_LEFT)) {
+            exampleCell.pushLeft();
+        }
+        if (gc.getInput().isKeyDown(Keyboard.KEY_RIGHT)) {
+            exampleCell.pushRight();
+        }
 
         // move entities
         for(Entity e : entities.stream().filter(e -> e instanceof MovableEntity).collect(Collectors.toSet())) {
             MovableEntity me = (MovableEntity)e;
+
+            me.decelerateNaturally(environmentDensity);
+
             // move them by speed
             me.setX(me.getX() + (me.getSpeedX()));
             me.setY(me.getY() + (me.getSpeedY()));
+
+            // basic reflect off the walls TODO: Implement entity bouncing/elasticity
+            while(me.getX() > gc.getWidth()) {
+                me.setX((gc.getWidth()*2) - me.getX());
+                me.accelerateByX(-me.getSpeedX() *2 );
+            }
+            while(me.getX() < 0) {
+                me.setX(- me.getX());
+                me.accelerateByX(-me.getSpeedX() * 2 );
+            }
+            while(me.getY() > gc.getHeight()) {
+                me.setY((gc.getHeight()*2) - me.getY());
+                me.accelerateByY(-me.getSpeedY() *2 );
+            }
+            while(me.getY() < 0) {
+                me.setY(- me.getY());
+                me.accelerateByY(-me.getSpeedY() * 2 );
+            }
+
 
             //  does work, not satisfying
             //me.accelerateByX(-(me.getSpeedX()/40));
             //me.accelerateByY(-(me.getSpeedY()/40));
 
 
-            me.decelerateNaturally(environmentDensity);
+
         }
     }
 
@@ -100,11 +136,13 @@ public class Game1 extends BasicGame {
     public void render(GameContainer gameContainer, Graphics graphics) {
         map.render(0, 0);
         for(Entity e : entities) {
-            e.getAnimation().draw(e.getX(), e.getY());
+            e.getAnimation().draw(e.getX() - (e.getAnimation().getWidth()/2f), e.getY() - (e.getAnimation().getHeight()/2f));
         }
         graphics.drawString(message, 100f, 100f);
         graphics.drawString(String.valueOf(timeDelta), 100f, 150f);
         graphics.drawString(String.valueOf(exampleCell.getSpeedX()) + " : " + String.valueOf(exampleCell.getSpeedY()), 100f, 200f);
+
+
 
         //slowDown();
     }
@@ -112,7 +150,7 @@ public class Game1 extends BasicGame {
     private void slowDown() {
         // slowing down the proccess
         String pls = "pls";
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 1000; i++) {
             pls += ".";
         }
         //System.out.print(pls);

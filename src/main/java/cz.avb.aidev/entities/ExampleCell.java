@@ -14,10 +14,28 @@ public class ExampleCell implements MovableEntity {
     private double speedX = 0;
     private double speedY = 0;
 
-    private double agility; // basic agility, affects movement and maybe more TODO: make it reduce friction
-    private double strength; // strength - affects attack, movement acceleration
-    private double endurance; // what the cell withstands internally (energy efficiency, regen., poison resistance, etc)
-    private double tenacity; // what the cell withstands externally (mechanical damage, impact damage etc)
+    /**
+     * basic agility, affects movement and maybe more TODO: make it reduce friction
+     * unit: nanograms
+     */
+    private double agility; // nanograms of agility focused mass
+
+    /**
+     * strength - affects attack, movement acceleration
+     * unit: nanograms
+     */
+    private double strength; // nanograms of strength focused mass
+
+    /**
+     * what the cell withstands internally (energy efficiency, regen., poison resistance, etc)
+     * each endurance point weights 1/2 of a nanogram
+     */
+    private double endurance; // halves of nanograms of endurance focused mass
+
+    /**
+     * what the cell withstands externally (mechanical damage, impact damage etc)
+     */
+    private double tenacity; // nanograms of tenacity focused mass
 
     private double fat = 0d; // stored energy
     private double energy = 0d;
@@ -96,17 +114,17 @@ public class ExampleCell implements MovableEntity {
 
     @Override
     public double getMass() {
-        return fat + strength + tenacity;
+        return (fat + strength + tenacity + (endurance / 2)) * 10e-9;
     }
 
     @Override
     public double getVolume() {
-        return fat + ((strength + tenacity)/2d);
+        return fat + ((strength + tenacity)/2d)*10e-6d;
     }
 
     @Override
     public double getBaseAccelerationForce() {
-        return sqrt(agility) + strength;
+        return (sqrt(agility) + strength) * 10e-9;
     }
 
     public double getEnergyCap() {
