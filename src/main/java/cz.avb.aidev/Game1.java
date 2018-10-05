@@ -1,30 +1,26 @@
 package cz.avb.aidev;
 
 
-import cz.avb.aidev.entities.Dummy;
+import cz.avb.aidev.entities.ExampleCell;
+import cz.avb.aidev.entities.Entity;
+import cz.avb.aidev.entities.MovableEntity;
 import org.newdawn.slick.*;
-import org.newdawn.slick.command.*;
 import org.newdawn.slick.tiled.TiledMap;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class Game1 extends BasicGame implements InputProviderListener {
+public class Game1 extends BasicGame {
     private TiledMap map;
 
     private String message = "";
     private int timeDelta;
 
-    private Dummy dummy;
-    private Set<Dummy> dummies = new HashSet<>();
+    private ExampleCell exampleCell;
+    private Set<Entity> entities = new HashSet<>();
 
-    private InputProvider inputProvider;
-
-
-    private static final Command ACC_U = new BasicCommand("accU");
-    private static final Command ACC_D = new BasicCommand("accD");
-    private static final Command ACC_L = new BasicCommand("accL");
-    private static final Command ACC_R = new BasicCommand("accR");
+    private double environmentDensity = 12d;
 
 
     public Game1() {
@@ -34,34 +30,23 @@ public class Game1 extends BasicGame implements InputProviderListener {
 
 
     @Override
-    public void controlPressed(Command command) {
-        //message = "Pressed: "+command;
-
-
-    }
-    @Override
-    public void controlReleased(Command command) {
-        //message = "Released: "+command;
-    }
-
-    @Override
     public void keyPressed(int key, char c) {
         //super.keyPressed(key, c);
         switch (key) {
             case Input.KEY_UP:
-                dummy.accelerateByY(-0.01f);
+                exampleCell.pushUp();
                 message = "Pressed UP";
                 break;
             case Input.KEY_DOWN:
-                dummy.accelerateByY(0.01f);
+                exampleCell.pushDown();
                 message = "Pressed DOWN";
                 break;
             case Input.KEY_LEFT:
-                dummy.accelerateByX(-0.01f);
+                exampleCell.pushLeft();
                 message = "Pressed LEFT";
                 break;
             case Input.KEY_RIGHT:
-                dummy.accelerateByX(0.01f);
+                exampleCell.pushRight();
                 message = "Pressed RIGHT";
                 break;
             default:
@@ -78,46 +63,59 @@ public class Game1 extends BasicGame implements InputProviderListener {
     public void init(GameContainer gameContainer) throws SlickException {
         map = new TiledMap("src/main/resources/Game1map01.tmx");
 
-        inputProvider = new InputProvider(gameContainer.getInput());
-        inputProvider.addListener(this);
+        exampleCell = new ExampleCell(44f, 21f, 3.5, 0.917, 0.8779, 11.000235, 5.054);
+        entities.add(exampleCell);
 
-        dummy = new Dummy(44f, 21f);
-        dummies.add(dummy);
-
-        // bind commands
-        inputProvider.bindCommand(new KeyControl(Input.KEY_UP), ACC_U);
-        inputProvider.bindCommand(new KeyControl(Input.KEY_DOWN), ACC_D);
-        inputProvider.bindCommand(new KeyControl(Input.KEY_LEFT), ACC_L);
-        inputProvider.bindCommand(new KeyControl(Input.KEY_RIGHT), ACC_R);
 
 
     }
 
     @Override
-    public void update(GameContainer gc, int delta) throws SlickException {
+    public void update(GameContainer gc, int delta) {
         this.timeDelta = delta;
-        String pls = "pls";
-        for (int i = 0; i < 5000; i++) {
-            pls += ".";
 
-        }
+        //slowDown();
 
-        for(Dummy d : dummies) {
+
+        // pressed controlls actions
+
+
+        // move entities
+        for(Entity e : entities.stream().filter(e -> e instanceof MovableEntity).collect(Collectors.toSet())) {
+            MovableEntity me = (MovableEntity)e;
             // move them by speed
-            d.setX(d.getX() + (d.getSpeedX()));
-            d.setY(d.getY() + (d.getSpeedY()));
+            me.setX(me.getX() + (me.getSpeedX()));
+            me.setY(me.getY() + (me.getSpeedY()));
+
+            // TODO: sounds good, does not work
+            //me.accelerateByX(-(me.getSpeedX()/0.332d));
+            //me.accelerateByY(-(me.getSpeedY()/0.332d));
+
+
+            //me.decelerateNaturally(environmentDensity);
         }
     }
 
     @Override
-    public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
+    public void render(GameContainer gameContainer, Graphics graphics) {
         map.render(0, 0);
-        for(Dummy d : dummies) {
-            d.getAnimation().draw(d.getX(), d.getY());
+        for(Entity e : entities) {
+            e.getAnimation().draw(e.getX(), e.getY());
         }
         graphics.drawString(message, 100f, 100f);
         graphics.drawString(String.valueOf(timeDelta), 100f, 150f);
-        graphics.drawString(String.valueOf(dummy.getSpeedX()) + " : " + String.valueOf(dummy.getSpeedY()), 100f, 200f);
+        graphics.drawString(String.valueOf(exampleCell.getSpeedX()) + " : " + String.valueOf(exampleCell.getSpeedY()), 100f, 200f);
+
+        //slowDown();
+    }
+
+    private void slowDown() {
+        // slowing down the proccess
+        String pls = "pls";
+        for (int i = 0; i < 1000; i++) {
+            pls += ".";
+        }
+        System.out.print(pls);
     }
 
 }
