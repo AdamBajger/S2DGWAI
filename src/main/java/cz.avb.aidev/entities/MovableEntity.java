@@ -59,6 +59,7 @@ public interface MovableEntity extends Entity {
     }
 
     default void decelerateNaturally(double environmentDensity) {
+        System.out.println(getCurrentFrictionX(environmentDensity));
         if (getSpeedX() > 0) {
             accelerateByX(- getCurrentFrictionX(environmentDensity));
         } else {

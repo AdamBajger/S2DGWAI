@@ -20,7 +20,7 @@ public class Game1 extends BasicGame {
     private ExampleCell exampleCell;
     private Set<Entity> entities = new HashSet<>();
 
-    private double environmentDensity = 12d;
+    private double environmentDensity = 1200d;
 
 
     public Game1() {
@@ -63,7 +63,7 @@ public class Game1 extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         map = new TiledMap("src/main/resources/Game1map01.tmx");
 
-        exampleCell = new ExampleCell(44f, 21f, 3.5, 0.917, 0.8779, 11.000235, 5.054);
+        exampleCell = new ExampleCell(44f, 21f, 3.5, 5.917, 4.8779, 11.000235, 5.054);
         entities.add(exampleCell);
 
 
@@ -74,7 +74,7 @@ public class Game1 extends BasicGame {
     public void update(GameContainer gc, int delta) {
         this.timeDelta = delta;
 
-        //slowDown();
+        slowDown();
 
 
         // pressed controlls actions
@@ -87,12 +87,12 @@ public class Game1 extends BasicGame {
             me.setX(me.getX() + (me.getSpeedX()));
             me.setY(me.getY() + (me.getSpeedY()));
 
-            // TODO: sounds good, does not work
-            //me.accelerateByX(-(me.getSpeedX()/0.332d));
-            //me.accelerateByY(-(me.getSpeedY()/0.332d));
+            //  does work, not satisfying
+            //me.accelerateByX(-(me.getSpeedX()/40));
+            //me.accelerateByY(-(me.getSpeedY()/40));
 
 
-            //me.decelerateNaturally(environmentDensity);
+            me.decelerateNaturally(environmentDensity);
         }
     }
 
@@ -112,10 +112,10 @@ public class Game1 extends BasicGame {
     private void slowDown() {
         // slowing down the proccess
         String pls = "pls";
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100000; i++) {
             pls += ".";
         }
-        System.out.print(pls);
+        //System.out.print(pls);
     }
 
 }
