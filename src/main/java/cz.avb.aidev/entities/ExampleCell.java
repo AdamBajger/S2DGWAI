@@ -18,24 +18,24 @@ public class ExampleCell implements MovableEntity {
      * basic agility, affects movement and maybe more TODO: make it reduce friction
      * unit: nanograms
      */
-    private double agility; // nanograms of agility focused mass
+    private int agility; // nanograms of agility focused mass
 
     /**
      * strength - affects attack, movement acceleration
      * unit: nanograms
      */
-    private double strength; // nanograms of strength focused mass
+    private int strength; // nanograms of strength focused mass
 
     /**
      * what the cell withstands internally (energy efficiency, regen., poison resistance, etc)
      * each endurance point weights 1/2 of a nanogram
      */
-    private double endurance; // halves of nanograms of endurance focused mass
+    private int endurance; // halves of nanograms of endurance focused mass
 
     /**
      * what the cell withstands externally (mechanical damage, impact damage etc)
      */
-    private double tenacity; // nanograms of tenacity focused mass
+    private int tenacity; // nanograms of tenacity focused mass
 
     private double fat = 0d; // stored energy
     private double energy = 0d;
@@ -46,7 +46,7 @@ public class ExampleCell implements MovableEntity {
 
     private Animation animation;
 
-    public ExampleCell(float x, float y, double facing, double agility, double strength, double endurance, double tenacity) {
+    public ExampleCell(float x, float y, double facing, int agility, int strength, int endurance, int tenacity) {
         this.x = x;
         this.y = y;
         this.facing = facing;
@@ -114,17 +114,22 @@ public class ExampleCell implements MovableEntity {
 
     @Override
     public double getMass() {
-        return (fat + strength + tenacity + (endurance / 2)) * 10e-9;
+        return (fat + strength + tenacity + (endurance / 2d)) * 10e-9d;
     }
 
     @Override
     public double getVolume() {
-        return fat + ((strength + tenacity)/2d)*10e-6d;
+        return (fat/1.4d + strength + tenacity/2d)*10e-9d;
     }
 
     @Override
     public double getBaseAccelerationForce() {
-        return (sqrt(agility) + strength) * 10e-9;
+        return (strength + sqrt(agility)) * 10e-9d;
+    }
+
+    @Override
+    public double getDragCoefficient() {
+        return 1d/agility;
     }
 
     public double getEnergyCap() {
