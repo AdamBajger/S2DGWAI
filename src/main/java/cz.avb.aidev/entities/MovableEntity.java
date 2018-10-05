@@ -113,30 +113,22 @@ public interface MovableEntity extends Entity {
      * Applies a force that the cell is cappable of on itself in a direction -Y
      * The acceleration is counted relative to the mass of the object and a time of 1 tick
      */
-    default void pushUp() {
-        accelerateByY(- getBaseAccelerationForce()/getMass());
-    }
+    void pushUp();
     /**
      * Applies a force that the cell is cappable of on itself in a direction Y
      * The acceleration is counted relative to the mass of the object and a time of 1 tick
      */
-    default void pushDown() {
-        accelerateByY(getBaseAccelerationForce()/getMass());
-    }
+    void pushDown();
     /**
      * Applies a force that the cell is cappable of on itself in a direction X
      * The acceleration is counted relative to the mass of the object and a time of 1 tick
      */
-    default void pushRight() {
-        accelerateByX(getBaseAccelerationForce()/getMass());
-    }
+    void pushRight();
     /**
      * Applies a force that the cell is cappable of on itself in a direction -X
      * The acceleration is counted relative to the mass of the object and a time of 1 tick
      */
-    default void pushLeft() {
-        accelerateByX(- getBaseAccelerationForce()/getMass());
-    }
+    void pushLeft();
 
     /**
      * TODO: test that this works

@@ -6,6 +6,10 @@ import org.newdawn.slick.SlickException;
 
 import static java.lang.StrictMath.sqrt;
 
+/**
+ * TODO: Extract interface for living cell (metabolic processes, food ingestion, energy regen, fat circulation, etc)
+ * Represents an example of a cell. Not perfect, not bad either. Just an example...
+ */
 public class ExampleCell implements MovableEntity {
     private double x;
     private double y;
@@ -150,5 +154,50 @@ public class ExampleCell implements MovableEntity {
 
     public int getAge() {
         return age;
+    }
+
+    /**
+     * This will try to consume an amount of energy. Returns true if enough energy was consumed
+     * Returns false if not enough energy was present (thus not consumed)
+     * @return true/flase
+     */
+    private boolean tryToSpendEnergy(double energyToConsume) {
+        if (this.energy > energyToConsume) {
+            this.energy = this.energy - energyToConsume;
+            return true;
+        } else {
+            this.energy = 0;
+            return false;
+        }
+    }
+
+    @Override
+    public void pushUp() {
+        double f = getBaseAccelerationForce();
+        if(tryToSpendEnergy(f)) {
+
+            accelerateByY(-f / getMass());
+        }
+    }
+    @Override
+    public void pushDown() {
+        double f = getBaseAccelerationForce();
+        if(tryToSpendEnergy(f)) {
+            accelerateByY(f / getMass());
+        }
+    }
+    @Override
+    public void pushRight() {
+        double f = getBaseAccelerationForce();
+        if(tryToSpendEnergy(f)) {
+            accelerateByX(f / getMass());
+        }
+    }
+    @Override
+    public void pushLeft() {
+        double f = getBaseAccelerationForce();
+        if(tryToSpendEnergy(f)) {
+            accelerateByX(-f / getMass());
+        }
     }
 }
