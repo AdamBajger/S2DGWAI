@@ -79,21 +79,28 @@ public class ExampleCell implements MovableEntity {
 
     }
 
+    public void executeInternalProcesses() {
+
+    }
+
     @Override
     public double getFacing() {
         return facing;
     }
-
+    @Override
     public float getX() {
         return (float)x;
     }
+    @Override
     public float getY() {
         return (float)y;
     }
 
+    @Override
     public void setX(double x) {
         this.x = x;
     }
+    @Override
     public void setY(double y) {
         this.y = y;
     }
@@ -120,14 +127,21 @@ public class ExampleCell implements MovableEntity {
         this.speedY = this.speedY + y;
     }
 
+    /**
+     * TODO: include intelligence into mass
+     * @return
+     */
     @Override
     public double getMass() {
         return (fat + strength + tenacity + (endurance / 2d)) * 10e-9d;
     }
-
+    /**
+     * TODO: include intelligence into volume
+     * @return
+     */
     @Override
     public double getVolume() {
-        return (fat/1.4d + strength + tenacity/2d)*10e-9d;
+        return ((fat*0.6) + (strength * 0.8) + (tenacity * 0.4)) * 10e-9d;
     }
 
     @Override
