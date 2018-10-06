@@ -25,7 +25,7 @@ public interface MovableEntity extends Entity {
      * Returns the largest cross-ection among cross-sections of the object with planes
      * perpendicular to the direction of the movement.
      * Default value is calculated as if the object was a sphere (defined by Volume)
-     * @return cross-section for drag calculation
+     * @return cross-section for drag calculation in meters squared
      */
     default double getCrossSection() {
         return (pow((9d * PI)/16d, 1d/3d)) * (pow(getVolume(), 2d/3d));
@@ -149,7 +149,7 @@ public interface MovableEntity extends Entity {
         double frictionDecelerationY = getCurrentFrictionY(environmentDensity)/getMass(); // relative to mass and 1 tick
         double speedX = getSpeedX();
         double speedY = getSpeedY();
-        System.out.println(frictionDecelerationX + frictionDecelerationY);
+        System.out.println(frictionDecelerationX + " : " + frictionDecelerationY + " - " + getSpeedX() + " : " + getSpeedY());
 
 
         if (frictionDecelerationX > abs( speedX)) {

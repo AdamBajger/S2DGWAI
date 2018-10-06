@@ -21,7 +21,7 @@ public class Game1 extends BasicGame {
     private ExampleCell exampleCell;
     private Set<Entity> entities = new HashSet<>();
 
-    private double environmentDensity = 1200d;
+    private double environmentDensity = 1000d;
 
 
     public Game1() {
@@ -64,7 +64,7 @@ public class Game1 extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         map = new TiledMap("src/main/resources/Game1map01.tmx");
 
-        exampleCell = new ExampleCell(44f, 21f, 3.5, 5, 5, 11, 50);
+        exampleCell = new ExampleCell(44f, 21f, 3.5, 50000, 54, 11, 50);
         entities.add(exampleCell);
 
 
@@ -75,7 +75,7 @@ public class Game1 extends BasicGame {
     public void update(GameContainer gc, int delta) {
         this.timeDelta = delta;
 
-        slowDown();
+        //slowDown();
 
 
 
