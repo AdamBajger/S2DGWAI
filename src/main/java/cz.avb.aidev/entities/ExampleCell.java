@@ -147,18 +147,12 @@ public class ExampleCell implements MovableEntity {
 
     @Override
     public double getBaseAccelerationForce() {
-        return (strength + sqrt(agility)) * 10e-4 ; // 9 for the nanoNewtons, 0 just to decrease minimum speed
+        return (strength + sqrt(agility)) * 10e-9 ; // 9 for the nanoNewtons
     }
 
     @Override
     public double getDragCoefficient() {
-        return 1;
-        // TODO: complete
-        /*if (agility > 1) {
-            return 1d / log(agility);
-        } else {
-            return 1;
-        }*/
+        return 1d / sqrt(agility);
     }
 
     public double getEnergyCap() {

@@ -100,9 +100,11 @@ public class Game1 extends BasicGame {
 
             me.decelerateNaturally(environmentDensity);
 
-            // move them by speed
-            me.setX(me.getX() + (me.getSpeedX()));
-            me.setY(me.getY() + (me.getSpeedY()));
+            // move them by speed - the speed is in metres, our desk is in nanometres.
+            // since one pixel is like 1 nanometer, and we get the speed in metres, we need to modify it
+            // --> it is multiplied by 10e+9
+            me.setX(me.getX() + (me.getSpeedX() * 10e+9d));
+            me.setY(me.getY() + (me.getSpeedY() * 10e+9d));
 
             // basic reflect off the walls TODO: Implement entity bouncing/elasticity
             while((double)me.getX() > (double)gc.getWidth()) {
