@@ -64,7 +64,7 @@ public class Game1 extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         map = new TiledMap("src/main/resources/Game1map01.tmx");
 
-        exampleCell = new ExampleCell(44f, 21f, 3.5, 50000, 54, 11, 50);
+        exampleCell = new ExampleCell(44f, 21f, 3.5, 50, 54, 11, 50);
         entities.add(exampleCell);
 
 
@@ -105,21 +105,21 @@ public class Game1 extends BasicGame {
             me.setY(me.getY() + (me.getSpeedY()));
 
             // basic reflect off the walls TODO: Implement entity bouncing/elasticity
-            while(me.getX() > gc.getWidth()) {
-                me.setX((gc.getWidth()*2) - me.getX());
-                me.accelerateByX(-me.getSpeedX() *2 );
+            while((double)me.getX() > (double)gc.getWidth()) {
+                me.setX(((double)(gc.getWidth())*2d) - me.getX());
+                me.accelerateByX(-me.getSpeedX() *2d );
             }
-            while(me.getX() < 0) {
+            while((double)me.getX() < 0d) {
                 me.setX(- me.getX());
-                me.accelerateByX(-me.getSpeedX() * 2 );
+                me.accelerateByX(-me.getSpeedX() * 2d );
             }
-            while(me.getY() > gc.getHeight()) {
-                me.setY((gc.getHeight()*2) - me.getY());
-                me.accelerateByY(-me.getSpeedY() *2 );
+            while((double)me.getY() > (double)gc.getHeight()) {
+                me.setY(((double)(gc.getHeight())*2d) - me.getY());
+                me.accelerateByY(-me.getSpeedY() *2d );
             }
-            while(me.getY() < 0) {
+            while((double)me.getY() < 0d) {
                 me.setY(- me.getY());
-                me.accelerateByY(-me.getSpeedY() * 2 );
+                me.accelerateByY(-me.getSpeedY() * 2d );
             }
 
 

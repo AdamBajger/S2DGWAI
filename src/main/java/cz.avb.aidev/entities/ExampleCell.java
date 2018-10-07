@@ -4,6 +4,7 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import static java.lang.Math.log;
 import static java.lang.StrictMath.sqrt;
 
 /**
@@ -132,12 +133,18 @@ public class ExampleCell implements MovableEntity {
 
     @Override
     public double getBaseAccelerationForce() {
-        return (strength + sqrt(agility)) * 10e-9d ; // 9 for the nanoNewtons, 0 just to decrease minimum speed
+        return (strength + sqrt(agility)) * 10e-4 ; // 9 for the nanoNewtons, 0 just to decrease minimum speed
     }
 
     @Override
     public double getDragCoefficient() {
-        return 1d/agility;
+        return 1;
+        // TODO: complete
+        /*if (agility > 1) {
+            return 1d / log(agility);
+        } else {
+            return 1;
+        }*/
     }
 
     public double getEnergyCap() {
