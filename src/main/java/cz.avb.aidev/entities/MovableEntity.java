@@ -75,7 +75,7 @@ public interface MovableEntity extends Entity {
      * @return the friction force in direction X
      */
     default double getCurrentFrictionX(double environmentDensity) {
-        return (environmentDensity * pow(getSpeedX() * 10e-9, 2) * getDragCoefficient() * getCrossSection() ) / 2d;
+        return (environmentDensity * pow(getSpeedX(), 2) * 10e-9d * getDragCoefficient() * getCrossSection() ) / 2d;
     }
     /**
      * Calculates the friction in the direction Y based on the environment density
@@ -83,7 +83,7 @@ public interface MovableEntity extends Entity {
      * @return the friction force in direction Y
      */
     default double getCurrentFrictionY(double environmentDensity) {
-        return (environmentDensity * pow(getSpeedY() * 10e-9, 2) * getDragCoefficient() * getCrossSection() ) / 2d;
+        return (environmentDensity * pow(getSpeedY(), 2) * 10e-9d * getDragCoefficient() * getCrossSection() ) / 2d;
     }
 
     /**

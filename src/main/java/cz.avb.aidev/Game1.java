@@ -21,7 +21,7 @@ public class Game1 extends BasicGame {
     private ExampleCell exampleCell;
     private Set<Entity> entities = new HashSet<>();
 
-    private double environmentDensity = 1000d;
+    private double environmentDensity = 1400d;
 
 
     public Game1() {
@@ -64,7 +64,7 @@ public class Game1 extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         map = new TiledMap("src/main/resources/Game1map01.tmx");
 
-        exampleCell = new ExampleCell(44f, 21f, 3.5, 50, 54, 11, 50);
+        exampleCell = new ExampleCell(44f, 21f, 3.5, 500, 54, 11, 50);
         entities.add(exampleCell);
 
 
@@ -103,8 +103,8 @@ public class Game1 extends BasicGame {
             // move them by speed - the speed is in metres, our desk is in nanometres.
             // since one pixel is like 1 nanometer, and we get the speed in metres, we need to modify it
             // --> it is multiplied by 10e+9
-            me.setX(me.getX() + (me.getSpeedX() * 10e+9d));
-            me.setY(me.getY() + (me.getSpeedY() * 10e+9d));
+            me.setX(me.getX() + (me.getSpeedX() ));
+            me.setY(me.getY() + (me.getSpeedY() ));
 
             // basic reflect off the walls TODO: Implement entity bouncing/elasticity
             while((double)me.getX() > (double)gc.getWidth()) {

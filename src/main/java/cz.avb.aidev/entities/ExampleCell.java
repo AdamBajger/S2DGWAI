@@ -47,7 +47,7 @@ public class ExampleCell implements MovableEntity {
     private int tenacity; // nanograms of tenacity focused mass
 
     private double fat = 0d; // stored energy
-    private double energy = 10000000d;
+    private double energy = 100d;
     private double health = 0d;
 
     private int age = 0;
@@ -147,12 +147,12 @@ public class ExampleCell implements MovableEntity {
 
     @Override
     public double getBaseAccelerationForce() {
-        return (strength + sqrt(agility)) * 10e-9 ; // 9 for the nanoNewtons
+        return (strength + sqrt(agility)) * 10e-9d * 10e-3d ; // 9 for the nanoNewtons
     }
 
     @Override
     public double getDragCoefficient() {
-        return 1d / sqrt(agility);
+        return 1000d / sqrt(agility);
     }
 
     public double getEnergyCap() {
