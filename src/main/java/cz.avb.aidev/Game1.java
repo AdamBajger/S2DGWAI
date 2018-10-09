@@ -140,9 +140,10 @@ public class Game1 extends BasicGame {
         for(Entity e : entities) {
             e.getAnimation().draw(e.getX() - (e.getAnimation().getWidth()/2f), e.getY() - (e.getAnimation().getHeight()/2f));
         }
-        graphics.drawString(message, 100f, 100f);
-        graphics.drawString(String.valueOf(timeDelta), 100f, 150f);
-        graphics.drawString(String.valueOf(exampleCell.getSpeedX()) + " : " + String.valueOf(exampleCell.getSpeedY()), 100f, 200f);
+        //graphics.drawString(message, 100f, 100f);
+        //graphics.drawString(String.valueOf(timeDelta), 100f, 115f);
+        graphics.drawString(String.valueOf(exampleCell.getSpeedX()) + " : " + String.valueOf(exampleCell.getSpeedY()), 10f, 30f);
+        graphics.drawString(exampleCell.toString(), 10f, 45f);
 
 
 

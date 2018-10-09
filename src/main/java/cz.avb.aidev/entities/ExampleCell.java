@@ -15,7 +15,9 @@ import static java.lang.StrictMath.sqrt;
  * Represents an example of a cell. Not perfect, not bad either. Just an example...
  *
  */
-public class ExampleCell implements MovableEntity {
+public class ExampleCell implements MovableEntity, Organism {
+    private boolean isAlive = true;
+
     private double x;
     private double y;
     private double facing;
@@ -47,9 +49,12 @@ public class ExampleCell implements MovableEntity {
     private int tenacity; // nanograms of tenacity focused mass
 
     private double fat = 0d; // stored energy
-    private double energy = 100d;
-    private double health = 0d;
+    private double energy = 1000d;
+    private double health = 100d;
 
+    /**
+     * Age in game iterations
+     */
     private int age = 0;
 
 
@@ -80,8 +85,18 @@ public class ExampleCell implements MovableEntity {
 
     }
 
-    public void executeInternalProcesses() {
 
+    @Override
+    public void executeInternalProcesses() {
+        // age
+        if(this.age > getAgeCap()) {
+
+        }
+    }
+
+    @Override
+    public boolean isAlive() {
+        return isAlive;
     }
 
     @Override
@@ -147,7 +162,7 @@ public class ExampleCell implements MovableEntity {
 
     @Override
     public double getBaseAccelerationForce() {
-        return (strength + sqrt(agility)) * 10e-9d * 10e-3d ; // 9 for the nanoNewtons
+        return (strength + sqrt(agility)) * 10e-9d * 10e-3d ; // 9 for the nanoNewtons, 3 just for fun
     }
 
     @Override
@@ -155,32 +170,50 @@ public class ExampleCell implements MovableEntity {
         return 1000d / sqrt(agility);
     }
 
+    @Override
     public double getEnergyCap() {
         return endurance + ((strength + agility)/2d);
     }
 
+    @Override
     public double getHealthCap() {
         return endurance + strength;
     }
 
+    @Override
     public double getEnergy() {
         return energy;
     }
 
+    @Override
     public double getHealth() {
         return health;
     }
 
+    @Override
     public int getAge() {
         return age;
+    }
+
+    private int getAgeCap() {
+        // TODO: dodělat to nějak chytřeji
+        // ex: Buňka dostane na začátku číslo, označující zbývající iterace do smrti.
+        // Z tohoto čísla se bude ubírat podle rozpoložení buňky.
+        // Tlusté buňce víc, hubené míň, ve stresu víc, v klidu míň, apod.
+        return 80 * 1000000000;
     }
 
     /**
      * This will try to consume an amount of energy. Returns true if enough energy was consumed
      * Returns false if not enough energy was present (thus not consumed)
+     * Because we do not store energy in joules, but in nanojoules, we have to normalize the amount by multiplying
+     * ---> the normalization is not neccesarily accurate.
+     * @param energyToConsume The energy to be consumed in joules
      * @return true/flase
      */
     private boolean tryToSpendEnergy(double energyToConsume) {
+        energyToConsume *= 10e+6d;
+
         if (this.energy > energyToConsume) {
             this.energy = this.energy - energyToConsume;
             return true;
@@ -219,4 +252,24 @@ public class ExampleCell implements MovableEntity {
             accelerateByX(-f / getMass());
         }
     }
+
+    @Override
+    public String toString() {
+        return "ExampleCell{" + "\n" +
+                "x=" + x + "\n" +
+                ", y=" + y + "\n" +
+                ", facing=" + facing + "\n" +
+                ", speedX=" + speedX + "\n" +
+                ", speedY=" + speedY + "\n" +
+                ", agility=" + agility + "\n" +
+                ", strength=" + strength + "\n" +
+                ", endurance=" + endurance + "\n" +
+                ", tenacity=" + tenacity + "\n" +
+                ", fat=" + fat + "\n" +
+                ", energy=" + energy + "\n" +
+                ", health=" + health + "\n" +
+                ", age=" + age + "\n" +
+                '}';
+    }
+
 }

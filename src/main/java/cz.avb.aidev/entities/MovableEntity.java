@@ -149,7 +149,7 @@ public interface MovableEntity extends Entity {
         double frictionDecelerationY = getCurrentFrictionY(environmentDensity)/getMass(); // relative to mass and 1 tick
         double speedX = getSpeedX();
         double speedY = getSpeedY();
-        System.out.println(frictionDecelerationX + " : " + frictionDecelerationY + " - " + getSpeedX() + " : " + getSpeedY());
+        //System.out.println(frictionDecelerationX + " : " + frictionDecelerationY + " - " + getSpeedX() + " : " + getSpeedY());
 
 
         if (frictionDecelerationX > abs( speedX)) {
