@@ -14,4 +14,10 @@ public interface Organism {
     double getHealth();
 
     int getAge();
+
+    /**
+     * Removes slowly the mass of the cell, derading its stats and everything.
+     * Usually used after a cell is dead to remove it eventually from the game.
+     */
+    void decay();
 }

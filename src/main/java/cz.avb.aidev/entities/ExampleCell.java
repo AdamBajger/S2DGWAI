@@ -224,6 +224,11 @@ public class ExampleCell implements MovableEntity, Organism {
     }
 
     @Override
+    public void decay() {
+
+    }
+
+    @Override
     public void pushUp() {
         double f = getBaseAccelerationForce();
         if(tryToSpendEnergy(f)) {

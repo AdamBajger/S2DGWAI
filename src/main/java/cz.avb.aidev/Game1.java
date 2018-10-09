@@ -4,6 +4,7 @@ package cz.avb.aidev;
 import cz.avb.aidev.entities.ExampleCell;
 import cz.avb.aidev.entities.Entity;
 import cz.avb.aidev.entities.MovableEntity;
+import cz.avb.aidev.entities.Organism;
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.*;
 import org.newdawn.slick.tiled.TiledMap;
@@ -95,40 +96,54 @@ public class Game1 extends BasicGame {
         }
 
         // move entities
-        for(Entity e : entities.stream().filter(e -> e instanceof MovableEntity).collect(Collectors.toSet())) {
-            MovableEntity me = (MovableEntity)e;
+        for(Entity e : entities) {
+            if(e instanceof MovableEntity) {
+                MovableEntity me = (MovableEntity) e;
 
-            me.decelerateNaturally(environmentDensity);
+                me.decelerateNaturally(environmentDensity);
 
-            // move them by speed - the speed is in metres, our desk is in nanometres.
-            // since one pixel is like 1 nanometer, and we get the speed in metres, we need to modify it
-            // --> it is multiplied by 10e+9
-            me.setX(me.getX() + (me.getSpeedX() ));
-            me.setY(me.getY() + (me.getSpeedY() ));
+                // move them by speed - the speed is in metres, our desk is in nanometres.
+                // since one pixel is like 1 nanometer, and we get the speed in metres, we need to modify it
+                // --> it is multiplied by 10e+9
+                me.setX(me.getX() + (me.getSpeedX()));
+                me.setY(me.getY() + (me.getSpeedY()));
 
-            // basic reflect off the walls TODO: Implement entity bouncing/elasticity
-            while((double)me.getX() > (double)gc.getWidth()) {
-                me.setX(((double)(gc.getWidth())*2d) - me.getX());
-                me.accelerateByX(-me.getSpeedX() *2d );
+                // basic reflect off the walls TODO: Implement entity bouncing/elasticity
+                while ((double) me.getX() > (double) gc.getWidth()) {
+                    me.setX(((double) (gc.getWidth()) * 2d) - me.getX());
+                    me.accelerateByX(-me.getSpeedX() * 2d);
+                }
+                while ((double) me.getX() < 0d) {
+                    me.setX(-me.getX());
+                    me.accelerateByX(-me.getSpeedX() * 2d);
+                }
+                while ((double) me.getY() > (double) gc.getHeight()) {
+                    me.setY(((double) (gc.getHeight()) * 2d) - me.getY());
+                    me.accelerateByY(-me.getSpeedY() * 2d);
+                }
+                while ((double) me.getY() < 0d) {
+                    me.setY(-me.getY());
+                    me.accelerateByY(-me.getSpeedY() * 2d);
+                }
+
+
+                //  does work, not satisfying
+                //me.accelerateByX(-(me.getSpeedX()/40));
+                //me.accelerateByY(-(me.getSpeedY()/40));
+
+            } else if (e instanceof Organism) {
+                Organism o = (Organism) e;
+                if(o.isAlive()) {
+                    o.executeInternalProcesses();
+                } else {
+                    // died
+                    // TODO: remove only if no mass is left (decayed or eaten)
+                    // TODO: eating dead cells removes their mass (fat, strength and these things)
+
+                    o.decay();
+
+                }
             }
-            while((double)me.getX() < 0d) {
-                me.setX(- me.getX());
-                me.accelerateByX(-me.getSpeedX() * 2d );
-            }
-            while((double)me.getY() > (double)gc.getHeight()) {
-                me.setY(((double)(gc.getHeight())*2d) - me.getY());
-                me.accelerateByY(-me.getSpeedY() *2d );
-            }
-            while((double)me.getY() < 0d) {
-                me.setY(- me.getY());
-                me.accelerateByY(-me.getSpeedY() * 2d );
-            }
-
-
-            //  does work, not satisfying
-            //me.accelerateByX(-(me.getSpeedX()/40));
-            //me.accelerateByY(-(me.getSpeedY()/40));
-
 
 
         }
