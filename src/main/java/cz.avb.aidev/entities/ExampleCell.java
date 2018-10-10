@@ -4,7 +4,8 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import static java.lang.Math.log;
+import java.util.Objects;
+
 import static java.lang.StrictMath.sqrt;
 
 /**
@@ -48,8 +49,8 @@ public class ExampleCell implements MovableEntity, Organism {
      */
     private int tenacity; // nanograms of tenacity focused mass
 
-    private double fat = 0d; // stored energy
-    private double energy = 1000d;
+    private int fat = 1000; // stored energy
+    private double energy = 0.0001d;
     private double health = 100d;
 
     /**
@@ -89,7 +90,19 @@ public class ExampleCell implements MovableEntity, Organism {
     @Override
     public void executeInternalProcesses() {
         // age
+        this.age++;
         if(this.age > getAgeCap()) {
+            this.isAlive = false;
+        }
+
+        System.out.println(getEnergyCap());
+
+        if(this.energy < getEnergyCap()) {
+            if(fat > 0) {
+                fat = fat - 1;
+                energy = energy + 10e-6d;
+            }
+
 
         }
     }
@@ -172,7 +185,7 @@ public class ExampleCell implements MovableEntity, Organism {
 
     @Override
     public double getEnergyCap() {
-        return endurance + ((strength + agility)/2d);
+        return (endurance + ((strength + agility)/2d)) * 10e-9d;
     }
 
     @Override
@@ -200,7 +213,7 @@ public class ExampleCell implements MovableEntity, Organism {
         // ex: Buňka dostane na začátku číslo, označující zbývající iterace do smrti.
         // Z tohoto čísla se bude ubírat podle rozpoložení buňky.
         // Tlusté buňce víc, hubené míň, ve stresu víc, v klidu míň, apod.
-        return 80 * 1000000000;
+        return 20 * 1000;
     }
 
     /**
@@ -212,7 +225,7 @@ public class ExampleCell implements MovableEntity, Organism {
      * @return true/flase
      */
     private boolean tryToSpendEnergy(double energyToConsume) {
-        energyToConsume *= 10e+6d;
+        //energyToConsume *= 10e+6d;
 
         if (this.energy > energyToConsume) {
             this.energy = this.energy - energyToConsume;
@@ -226,6 +239,21 @@ public class ExampleCell implements MovableEntity, Organism {
     @Override
     public void decay() {
 
+        if (agility > 0) {
+            agility--;
+        }
+        if (strength > 0) {
+            strength--;
+        }
+        if (endurance > 0) {
+            endurance--;
+        }
+        if (tenacity > 0) {
+            tenacity--;
+        }
+        if (fat > 0) {
+            fat--;
+        }
     }
 
     @Override
@@ -277,4 +305,29 @@ public class ExampleCell implements MovableEntity, Organism {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExampleCell that = (ExampleCell) o;
+        return isAlive == that.isAlive &&
+                Double.compare(that.x, x) == 0 &&
+                Double.compare(that.y, y) == 0 &&
+                Double.compare(that.facing, facing) == 0 &&
+                Double.compare(that.speedX, speedX) == 0 &&
+                Double.compare(that.speedY, speedY) == 0 &&
+                agility == that.agility &&
+                strength == that.strength &&
+                endurance == that.endurance &&
+                tenacity == that.tenacity &&
+                Double.compare(that.fat, fat) == 0 &&
+                Double.compare(that.energy, energy) == 0 &&
+                Double.compare(that.health, health) == 0 &&
+                age == that.age;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isAlive, x, y, facing, speedX, speedY, agility, strength, endurance, tenacity, fat, energy, health, age);
+    }
 }

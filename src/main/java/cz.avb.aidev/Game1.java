@@ -37,22 +37,22 @@ public class Game1 extends BasicGame {
         switch (key) {
             case Input.KEY_UP:
                 exampleCell.pushUp();
-                message = "Pressed UP";
+                //message = "Pressed UP";
                 break;
             case Input.KEY_DOWN:
                 exampleCell.pushDown();
-                message = "Pressed DOWN";
+                //message = "Pressed DOWN";
                 break;
             case Input.KEY_LEFT:
                 exampleCell.pushLeft();
-                message = "Pressed LEFT";
+                //message = "Pressed LEFT";
                 break;
             case Input.KEY_RIGHT:
                 exampleCell.pushRight();
-                message = "Pressed RIGHT";
+                //message = "Pressed RIGHT";
                 break;
             default:
-                message = "Unsupported yet";
+                //message = "Unsupported yet";
         }
     }
 
@@ -131,7 +131,8 @@ public class Game1 extends BasicGame {
                 //me.accelerateByX(-(me.getSpeedX()/40));
                 //me.accelerateByY(-(me.getSpeedY()/40));
 
-            } else if (e instanceof Organism) {
+            }
+            if (e instanceof Organism) {
                 Organism o = (Organism) e;
                 if(o.isAlive()) {
                     o.executeInternalProcesses();
@@ -141,6 +142,10 @@ public class Game1 extends BasicGame {
                     // TODO: eating dead cells removes their mass (fat, strength and these things)
 
                     o.decay();
+                    if (o.getMass() <= 0) {
+                        //entities.remove(o);
+                        message = "died";
+                    }
 
                 }
             }
@@ -155,7 +160,7 @@ public class Game1 extends BasicGame {
         for(Entity e : entities) {
             e.getAnimation().draw(e.getX() - (e.getAnimation().getWidth()/2f), e.getY() - (e.getAnimation().getHeight()/2f));
         }
-        //graphics.drawString(message, 100f, 100f);
+        graphics.drawString(message, 175f, 100f);
         //graphics.drawString(String.valueOf(timeDelta), 100f, 115f);
         graphics.drawString(String.valueOf(exampleCell.getSpeedX()) + " : " + String.valueOf(exampleCell.getSpeedY()), 10f, 30f);
         graphics.drawString(exampleCell.toString(), 10f, 45f);

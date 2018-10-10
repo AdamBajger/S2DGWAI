@@ -1,6 +1,6 @@
 package cz.avb.aidev.entities;
 
-public interface Organism {
+public interface Organism extends MovableEntity {
     void executeInternalProcesses();
 
     boolean isAlive();
