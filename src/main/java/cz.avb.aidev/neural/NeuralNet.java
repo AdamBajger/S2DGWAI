@@ -87,8 +87,21 @@ public class NeuralNet {
         //int outputLength,
         //int hiddenLayersCount,
         //int hiddenLayerLength,
-        DoubleMatrix inputLayer = evolveMatrix(this.inputLayer, maxEvolutionStep);
-        DoubleMatrix[] hiddenLayers,
-        DoubleMatrix outputLayer
+        DoubleMatrix evolvedInputLayer = evolveMatrix(this.inputLayer, maxEvolutionStep);
+        DoubleMatrix[] evolvedHiddenLayers = new DoubleMatrix[this.hiddenLayersCount];
+        for(int i = 0; i < hiddenLayersCount; i++) {
+            evolvedHiddenLayers[i] = evolveMatrix(this.hiddenLayers[i], maxEvolutionStep);
+        }
+        DoubleMatrix evolvedOutputLayer = evolveMatrix(this.outputLayer, maxEvolutionStep);
+
+        return new NeuralNet(
+                this.inputLength,
+                this.outputLength,
+                this.hiddenLayersCount,
+                this.hiddenLayerLength,
+                evolvedInputLayer,
+                evolvedHiddenLayers,
+                evolvedOutputLayer
+        );
     }
 }
