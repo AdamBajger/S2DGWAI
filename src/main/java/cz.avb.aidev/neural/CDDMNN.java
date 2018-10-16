@@ -3,14 +3,15 @@ package cz.avb.aidev.neural;
 import org.jblas.DoubleMatrix;
 
 /**
- * Neural net class
+ * Comparable Deep Double Matrix Neural Net
+ *
  * Scheme:
  * input vector * inputLayer --> hidden vector
  * hidden vector * hiddenLayer --> hidden vector
  * hidden vector * outputLayer --> output vector
  */
 
-public class CDNeuralNet implements NeuralNet<DoubleMatrix, DoubleMatrix>, EvolvingNeuralNet<NeuralNet> {
+public class CDDMNN implements EvolvingNeuralNet<double[], double[]> {
     private int inputLength;
     private int outputLength;
     private int hiddenLayersCount;
@@ -22,7 +23,7 @@ public class CDNeuralNet implements NeuralNet<DoubleMatrix, DoubleMatrix>, Evolv
     private DoubleMatrix outputLayer;
     private DoubleMatrix outputLayerThresholds;
 
-    public CDNeuralNet(
+    public CDDMNN(
             int inputLength,
             int outputLength,
             int hiddenLayersCount,
@@ -46,7 +47,7 @@ public class CDNeuralNet implements NeuralNet<DoubleMatrix, DoubleMatrix>, Evolv
         this.outputLayerThresholds = outputLayerThresholds;
     }
 
-    public CDNeuralNet(int inputLength, int outputLength, int hiddenLayersCount, int hiddenLayerLength) {
+    public CDDMNN(int inputLength, int outputLength, int hiddenLayersCount, int hiddenLayerLength) {
         this.inputLength = inputLength;
         this.outputLength = outputLength;
         this.hiddenLayersCount = hiddenLayersCount;
@@ -55,6 +56,7 @@ public class CDNeuralNet implements NeuralNet<DoubleMatrix, DoubleMatrix>, Evolv
         inputLayer = DoubleMatrix.rand(inputLength, hiddenLayerLength);
         inputLayerThresholds = DoubleMatrix.rand(inputLength);
         hiddenLayers = new DoubleMatrix[hiddenLayersCount];
+        hiddenLayersThresholds = new DoubleMatrix[hiddenLayersCount];
         for(int i = 0; i < hiddenLayersCount; i++) {
             hiddenLayersThresholds[i] = DoubleMatrix.rand(hiddenLayerLength);
             hiddenLayers[i] = DoubleMatrix.rand(hiddenLayerLength, hiddenLayerLength);
@@ -64,15 +66,19 @@ public class CDNeuralNet implements NeuralNet<DoubleMatrix, DoubleMatrix>, Evolv
     }
 
     @Override
-    public DoubleMatrix getOutputForInput(DoubleMatrix input) {
+    public double[] getOutputForInput(double[] inputData) {
+        DoubleMatrix input = new DoubleMatrix(inputData);
         if (input.multipliesWith(inputLayer)) {
             throw new IllegalArgumentException("Input matrix has to have 1 row and " + inputLength + " columns.");
         }
-        DoubleMatrix result = input.max(inputLayerThresholds).mmul(inputLayer);
+        DoubleMatrix result = inputLayer
+                .mmul(
+                        input.max(inputLayerThresholds)
+                );
         for(int i = 0; i < hiddenLayersCount; i++) {
-            result = result.max(hiddenLayersThresholds[i]).mmul(hiddenLayers[i]);
+            result = hiddenLayers[i].mmul( result.max(hiddenLayersThresholds[i]) );
         }
-        return result.max(outputLayerThresholds).mul(outputLayer);
+        return outputLayer.mul( result.max(outputLayerThresholds) ).data;
 
     }
 
@@ -94,13 +100,13 @@ public class CDNeuralNet implements NeuralNet<DoubleMatrix, DoubleMatrix>, Evolv
     }
 
     /**
-     * Creates new instance of CDNeuralNet with slightly different values in all matrices inside.
+     * Creates new instance of CDDMNN with slightly different values in all matrices inside.
      *
      * @param maxEvolutionStep the maximum difference between original and evolved value in the matrix
      * @return randomly mutated neural net
      */
     @Override
-    public CDNeuralNet deriveMutatedDescendant(double maxEvolutionStep) {
+    public CDDMNN deriveMutatedDescendant(double maxEvolutionStep) {
         //int inputLength
         //int outputLength,
         //int hiddenLayersCount,
@@ -116,7 +122,7 @@ public class CDNeuralNet implements NeuralNet<DoubleMatrix, DoubleMatrix>, Evolv
         DoubleMatrix evolvedOutputLayer = deriveMutatedMatrix(this.outputLayer, maxEvolutionStep);
         DoubleMatrix evolvedOutputLayerThresholds = deriveMutatedMatrix(this.outputLayerThresholds, maxEvolutionStep);
 
-        return new CDNeuralNet(
+        return new CDDMNN(
                 this.inputLength,
                 this.outputLength,
                 this.hiddenLayersCount,
