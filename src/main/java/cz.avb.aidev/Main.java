@@ -1,6 +1,8 @@
 package cz.avb.aidev;
 
 
+import cz.avb.aidev.neural.CDDMNN;
+import cz.avb.aidev.neural.NeuralNet;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 import org.newdawn.slick.AppGameContainer;
@@ -30,11 +32,9 @@ public class Main {
         printMatrix(dm.mmul(dm2));
         */
 
-        DoubleMatrix dm = new DoubleMatrix(new double[][]{new double[]{1, 2, 3}, new double[]{4, 5, 6}, new double[]{7, 8, 9}});
-        DoubleMatrix dm2 = dm.transpose();
-        printMatrix(dm2.max(dm));
-        printMatrix(dm);
-        printMatrix(dm2);
+        NeuralNet net = new CDDMNN(2, 1, 2, 10);
+        System.out.print(net.getOutputForInput(new double[]{5, 6}));
+        //printMatrix(DoubleMatrix.rand(5, 2));
 
 
     }
