@@ -8,6 +8,8 @@ import org.jblas.MatrixFunctions;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
+import java.util.Arrays;
+
 public class Main {
     public static void main (String[] args) {
 
@@ -23,23 +25,35 @@ public class Main {
             e.printStackTrace();
         }*/
 
-        /*
-        DoubleMatrix dm = new DoubleMatrix(new double[][]{new double[]{1, 2, 3}, new double[]{4, 5, 6}});
+/*
+        DoubleMatrix dm = new DoubleMatrix(new double[]{0, 2});
         printMatrix(dm);
-        DoubleMatrix dm2 = new DoubleMatrix(new double[][]{new double[]{1, 4}, new double[]{2, 5}, new double[]{3, 6}});
+        DoubleMatrix dm2 = DoubleMatrix.rand(2, 5);
         printMatrix(dm2);
-        printMatrix(dm2.mmul(dm));
-        printMatrix(dm.mmul(dm2));
+        DoubleMatrix rowm = DoubleMatrix.rand(5, 1);
+        try {
+            printMatrix(dm.mmul(dm2));
+        } catch (Exception e) {
+            System.out.println("Not compatible");
+        }
+        try {
+            printMatrix(dm2.mmul(rowm));
+        } catch (Exception e) {
+            System.out.println("Not compatible");
+        }
         */
 
-        NeuralNet net = new CDDMNN(2, 1, 2, 10);
-        System.out.print(net.getOutputForInput(new double[]{5, 6}));
+
+
+        NeuralNet<double[], double[]> net = new CDDMNN(2, 1, 2, 5);
+        System.out.println(Arrays.toString(net.getOutputForInput(new double[]{5, 6})));
         //printMatrix(DoubleMatrix.rand(5, 2));
 
 
     }
 
     public static void printMatrix(DoubleMatrix dm) {
+        System.out.println("\\_______");
         for(int i = 0; i < dm.getRows(); i++) {
             System.out.println(dm.getRow(i));
         }

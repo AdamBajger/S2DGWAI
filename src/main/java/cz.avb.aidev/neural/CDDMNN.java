@@ -1,5 +1,6 @@
 package cz.avb.aidev.neural;
 
+import cz.avb.aidev.Main;
 import org.jblas.DoubleMatrix;
 
 /**
@@ -47,6 +48,19 @@ public class CDDMNN implements EvolvingNeuralNet<double[], double[]> {
         this.outputLayerThresholds = outputLayerThresholds;
     }
 
+    /**
+     * Constructs a consensual deep neural network. With layers and stuff... :)
+     * @param inputLength The length of the input vector, how many values you must push into the array to make it work
+     * @param outputLength The length of the output array
+     * @param hiddenLayersCount The actual number of hidden layers of "neurons".
+     *                          Actually we do not store neurons, we store the matrices of connections between these
+     *                          hypothetical neurons, so we actually have "one less" of the matrices, than
+     *                          the hiddenLayerCount says.
+     *                          On the other hand, we have exactly that many Threshold matrices as we have layers.
+     *                          That is why is it so dumb when it comes to the computation loop.
+     *
+     * @param hiddenLayerLength The number of hypothetical neurons in each layer (uniformly)
+     */
     public CDDMNN(int inputLength, int outputLength, int hiddenLayersCount, int hiddenLayerLength) {
         this.inputLength = inputLength;
         this.outputLength = outputLength;
@@ -54,31 +68,34 @@ public class CDDMNN implements EvolvingNeuralNet<double[], double[]> {
         this.hiddenLayerLength = hiddenLayerLength;
 
         inputLayer = DoubleMatrix.rand(inputLength, hiddenLayerLength);
-        inputLayerThresholds = DoubleMatrix.rand(inputLength);
-        hiddenLayers = new DoubleMatrix[hiddenLayersCount];
+        inputLayerThresholds = DoubleMatrix.rand(1, inputLength); // has to have 1 row
+        hiddenLayers = new DoubleMatrix[hiddenLayersCount-1];
         hiddenLayersThresholds = new DoubleMatrix[hiddenLayersCount];
-        for(int i = 0; i < hiddenLayersCount; i++) {
-            hiddenLayersThresholds[i] = DoubleMatrix.rand(hiddenLayerLength);
+        for(int i = 0; i < hiddenLayersCount-1; i++) {
+            hiddenLayersThresholds[i] = DoubleMatrix.rand(1, hiddenLayerLength); // has to have 1 row
             hiddenLayers[i] = DoubleMatrix.rand(hiddenLayerLength, hiddenLayerLength);
         }
+        hiddenLayersThresholds[hiddenLayersCount-1] = DoubleMatrix.rand(1, hiddenLayerLength); // setting up last threshold
         outputLayer = DoubleMatrix.rand(hiddenLayerLength, outputLength);
-        outputLayerThresholds = DoubleMatrix.rand(outputLength);
+        outputLayerThresholds = DoubleMatrix.rand(1, outputLength); // has to have 1 row
     }
 
     @Override
     public double[] getOutputForInput(double[] inputData) {
-        DoubleMatrix input = new DoubleMatrix(inputData);
-        if (input.multipliesWith(inputLayer)) {
-            throw new IllegalArgumentException("Input matrix has to have 1 row and " + inputLength + " columns.");
+        // here we have to insert it trasposed... cause it implicitly creates 1 column matrices... what a shit
+        DoubleMatrix input = new DoubleMatrix(new double[][] {inputData});
+
+        if (!input.multipliesWith(inputLayer)) {
+            throw new IllegalArgumentException("Input matrix has to have 1 row and " + inputLength + " columns." +
+                    " You got " + input.rows + " rows, " + input.columns + " columns.");
         }
-        DoubleMatrix result = inputLayer
-                .mmul(
-                        input.max(inputLayerThresholds)
-                );
-        for(int i = 0; i < hiddenLayersCount; i++) {
-            result = hiddenLayers[i].mmul( result.max(hiddenLayersThresholds[i]) );
+        DoubleMatrix result = input.max(inputLayerThresholds).mmul(inputLayer);
+        for(int i = 0; i < (hiddenLayersCount-1); i++) {
+            result = result.max(hiddenLayersThresholds[i].mmul( hiddenLayers[i] ));
         }
-        return outputLayer.mul( result.max(outputLayerThresholds) ).data;
+        //Main.printMatrix(result);
+        //Main.printMatrix(outputLayerThresholds);
+        return result.max(hiddenLayersThresholds[hiddenLayersCount-1]).mmul(outputLayer).max(outputLayerThresholds).toArray();
 
     }
 
@@ -113,12 +130,19 @@ public class CDDMNN implements EvolvingNeuralNet<double[], double[]> {
         //int hiddenLayerLength,
         DoubleMatrix evolvedInputLayer = deriveMutatedMatrix(this.inputLayer, maxEvolutionStep);
         DoubleMatrix evolvedInputLayerThresholds = deriveMutatedMatrix(this.inputLayerThresholds, maxEvolutionStep);
-        DoubleMatrix[] evolvedHiddenLayers = new DoubleMatrix[this.hiddenLayersCount];
+
+        // cause we store connections here, not neurons, we need 1 less
+        DoubleMatrix[] evolvedHiddenLayers = new DoubleMatrix[this.hiddenLayersCount-1];
+        // these correspond to actual neurons, so we need exact amount
         DoubleMatrix[] evolvedHiddenLayersThresholds = new DoubleMatrix[this.hiddenLayersCount];
-        for(int i = 0; i < hiddenLayersCount; i++) {
+        // we iterate through all layers except the last (we are setting connections, not neurons themselves)
+        for(int i = 0; i < hiddenLayersCount-1; i++) {
             evolvedHiddenLayersThresholds[i] = deriveMutatedMatrix(this.hiddenLayersThresholds[i], maxEvolutionStep);
             evolvedHiddenLayers[i] = deriveMutatedMatrix(this.hiddenLayers[i], maxEvolutionStep);
         }
+        // here we setup the last threshold layer we missed in the loop
+        evolvedHiddenLayersThresholds[hiddenLayersCount-1] = deriveMutatedMatrix(this.hiddenLayersThresholds[hiddenLayersCount-1], maxEvolutionStep);
+
         DoubleMatrix evolvedOutputLayer = deriveMutatedMatrix(this.outputLayer, maxEvolutionStep);
         DoubleMatrix evolvedOutputLayerThresholds = deriveMutatedMatrix(this.outputLayerThresholds, maxEvolutionStep);
 
