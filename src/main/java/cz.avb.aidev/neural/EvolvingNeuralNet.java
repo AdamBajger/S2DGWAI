@@ -1,5 +1,5 @@
 package cz.avb.aidev.neural;
 
-public interface EvolvingNeuralNet<inputType, outputType> extends NeuralNet<inputType, outputType> {
+public interface EvolvingNeuralNet extends NeuralNet {
     EvolvingNeuralNet deriveMutatedDescendant(double maxEvolutionStep);
 }

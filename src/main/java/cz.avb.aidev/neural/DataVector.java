@@ -1,13 +1,11 @@
 package cz.avb.aidev.neural;
 
+import org.jblas.DoubleMatrix;
+
 import java.util.Collection;
 
 public class DataVector {
     private final double[] data;
-
-    public DataVector(double[] data) {
-        this.data = data;
-    }
 
     public DataVector(Collection<Double> collection) {
         double[] d = new double[collection.size()];
@@ -19,7 +17,7 @@ public class DataVector {
         this.data = d;
     }
 
-    public DataVector(Double[] data) {
+    public DataVector(Double... data) {
         double[] doubles = new double[data.length];
         for(int i = 0; i < data.length; i++) {
             doubles[i] = data[i];
@@ -27,11 +25,15 @@ public class DataVector {
         this.data = doubles;
     }
 
-    public DataVector(double[] data) {
+    public DataVector(DoubleMatrix data) {
+        this.data = data.data;
+    }
+
+    public DataVector(double... data) {
         this.data = data;
     }
 
-    public DataVector(double[] data) {
-        this.data = data;
+    public double[] getData() {
+        return data;
     }
 }

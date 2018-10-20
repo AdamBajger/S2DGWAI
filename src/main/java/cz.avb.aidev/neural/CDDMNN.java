@@ -12,7 +12,7 @@ import org.jblas.DoubleMatrix;
  * hidden vector * outputLayer --> output vector
  */
 
-public class CDDMNN implements EvolvingNeuralNet<double[], double[]> {
+public class CDDMNN implements EvolvingNeuralNet {
     private int inputLength;
     private int outputLength;
     private int hiddenLayersCount;
@@ -81,9 +81,9 @@ public class CDDMNN implements EvolvingNeuralNet<double[], double[]> {
     }
 
     @Override
-    public double[] getOutputForInput(double[] inputData) {
+    public double[] getOutputForInput(DataVector inputVector) {
         // here we have to insert it trasposed... cause it implicitly creates 1 column matrices... what a shit
-        DoubleMatrix input = new DoubleMatrix(new double[][] {inputData});
+        DoubleMatrix input = new DoubleMatrix(new double[][] {inputVector.getData()});
 
         if (!input.multipliesWith(inputLayer)) {
             throw new IllegalArgumentException("Input matrix has to have 1 row and " + inputLength + " columns." +
