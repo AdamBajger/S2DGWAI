@@ -7,9 +7,22 @@ public class ScoredNet implements Comparable<ScoredNet> {
     public ScoredNet(NeuralNet net) {
         this.net = net;
     }
+    public ScoredNet(NeuralNet net, double score) {
+        this(net);
+        assignScore(score);
+    }
+    public ScoredNet(NeuralNet net, CostFunction costFunction) {
+        this(net);
+        assignScore(costFunction.getScoreForNeuralNet(net));
+    }
 
-    public void assignScore(double score) {
+    public ScoredNet assignScore(double score) {
         this.score = score;
+        return this;
+    }
+
+    public NeuralNet getNet() {
+        return net;
     }
 
     @Override

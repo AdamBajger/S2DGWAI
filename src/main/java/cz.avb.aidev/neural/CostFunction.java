@@ -1,5 +1,10 @@
 package cz.avb.aidev.neural;
 
+/**
+ * This represents a cost function
+ * Class implementing this interface should contain its own testing data and define rules for scoring.
+ * @author AVB
+ */
 public interface CostFunction {
-    public double getScoreForNeuralNet(NeuralNet neuralNet, DataVector inputData);
+    double getScoreForNeuralNet(NeuralNet neuralNet);
 }

@@ -2,6 +2,7 @@ package cz.avb.aidev;
 
 
 import cz.avb.aidev.neural.CDDMNN;
+import cz.avb.aidev.neural.DataVector;
 import cz.avb.aidev.neural.NeuralNet;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
@@ -45,8 +46,8 @@ public class Main {
 
 
 
-        NeuralNet<double[], double[]> net = new CDDMNN(2, 1, 2, 5);
-        System.out.println(Arrays.toString(net.getOutputForInput(new double[]{5, 6})));
+        NeuralNet net = new CDDMNN(2, 1, 2, 5);
+        System.out.println(Arrays.toString(net.getOutputForInput(new DataVector(5, 6))));
         //printMatrix(DoubleMatrix.rand(5, 2));
 
 
