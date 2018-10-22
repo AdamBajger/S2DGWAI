@@ -1,11 +1,14 @@
 package cz.avb.aidev.neural;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public class NeuralNetEvolver {
-    private final List<EvolvingNeuralNet> bestNets = new LinkedList<>();
+    private final List<EvolvingNeuralNet> bestNets;
     private int numberOfBestNetsToEvolve;
-    private NavigableSet<ScoredNet> scoredNets = new TreeSet<>();
+    private NavigableSet<ScoredNet> scoredNets;
     private double[] evolutionPoolConfiguration;
     private CostFunction costFunction;
 
@@ -30,12 +33,14 @@ public class NeuralNetEvolver {
      *                      with the maxEvolutionStep 1.
      */
     public NeuralNetEvolver(EvolvingNeuralNet initialNet, CostFunction costFunction, int numberOfBestNetsToEvolve, double... configuration) {
+        bestNets = new LinkedList<>();
         for (int i = 0; i < numberOfBestNetsToEvolve; i++) {
             this.bestNets.add(initialNet);
         }
         this.numberOfBestNetsToEvolve = numberOfBestNetsToEvolve;
         this.costFunction = costFunction;
         this.evolutionPoolConfiguration = configuration;
+        scoredNets = new TreeSet<>();
     }
 
     public void evolveNewGeneration() {
