@@ -52,4 +52,13 @@ public class NeuralNetEvolver {
 
     }
 
+    public void evolveGenerations(int numberOfGenerations) {
+        for (int i = 0; i < numberOfGenerations; i++) {
+            evolveNewGeneration();
+        }
+    }
+
+    public List<EvolvingNeuralNet> getBestNets() {
+        return new LinkedList<>(bestNets);
+    }
 }
