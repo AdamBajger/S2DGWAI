@@ -27,7 +27,7 @@ public class ExampleCell implements MovableEntity, Organism {
     private double speedY = 0;
 
     /**
-     * basic agility, affects movement and maybe more TODO: make it reduce friction
+     * basic agility, affects movement and maybe more
      * unit: nanograms
      */
     private int agility; // nanograms of agility focused mass
