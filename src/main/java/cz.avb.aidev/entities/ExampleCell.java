@@ -158,7 +158,7 @@ public class ExampleCell implements MovableEntity, Organism {
 
     /**
      * TODO: include intelligence into mass
-     * @return
+     * @return the mass of this object
      */
     @Override
     public double getMass() {
@@ -166,7 +166,7 @@ public class ExampleCell implements MovableEntity, Organism {
     }
     /**
      * TODO: include intelligence into volume
-     * @return
+     * @return returns the volume of this object
      */
     @Override
     public double getVolume() {
