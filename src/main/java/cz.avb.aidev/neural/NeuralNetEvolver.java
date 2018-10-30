@@ -11,6 +11,10 @@ public class NeuralNetEvolver {
     private NavigableSet<ScoredNet> scoredNets;
     private double[] evolutionPoolConfiguration;
     private CostFunction costFunction;
+    public enum Sorting {
+        DIVERGE_TO_INFINITY, CONVERGE_TO_ZERO, DIVERGE_TO_NEGATIVE_INFINITY
+    }
+    private Sorting sortingMethod;
 
     /**
      * Creates new instance of the evolver.
@@ -32,7 +36,7 @@ public class NeuralNetEvolver {
      *                      <b>one</b> net evolved with the maxEvolutionStep 0.2 and <b>one</b> net evolved
      *                      with the maxEvolutionStep 1.
      */
-    public NeuralNetEvolver(EvolvingNeuralNet initialNet, CostFunction costFunction, int numberOfBestNetsToEvolve, double... configuration) {
+    public NeuralNetEvolver(EvolvingNeuralNet initialNet, CostFunction costFunction, Sorting sortingMethod, int numberOfBestNetsToEvolve, double... configuration) {
         bestNets = new LinkedList<>();
         for (int i = 0; i < numberOfBestNetsToEvolve; i++) {
             this.bestNets.add(initialNet);
@@ -41,17 +45,41 @@ public class NeuralNetEvolver {
         this.costFunction = costFunction;
         this.evolutionPoolConfiguration = configuration;
         scoredNets = new TreeSet<>();
+        this.sortingMethod = sortingMethod;
     }
 
     public void evolveNewGeneration() {
         for (EvolvingNeuralNet enn : bestNets) {
-            for (double anEvolutionPoolConfiguration : evolutionPoolConfiguration) {
-                scoredNets.add( new ScoredNet(enn.deriveMutatedDescendant(anEvolutionPoolConfiguration), costFunction) );
+            for (double evolutionStep : evolutionPoolConfiguration) {
+                scoredNets.add( new ScoredNet(enn.deriveMutatedDescendant(evolutionStep), costFunction) );
             }
         }
         this.bestNets.clear();
         for (int i = 0; i < numberOfBestNetsToEvolve; i++) {
-            bestNets.add((EvolvingNeuralNet) scoredNets.pollLast().getNet());
+            switch (this.sortingMethod) {
+                case DIVERGE_TO_INFINITY:
+                    bestNets.add((EvolvingNeuralNet) scoredNets.pollLast().getNet());
+                    break;
+                case DIVERGE_TO_NEGATIVE_INFINITY:
+                    bestNets.add((EvolvingNeuralNet) scoredNets.pollFirst().getNet());
+                    break;
+                case CONVERGE_TO_ZERO:
+                    ScoredNet afterZero = scoredNets.higher(new ScoredNet(null, 0));
+                    ScoredNet beforeZero = scoredNets.lower(new ScoredNet(null, 0));
+                    if (afterZero != null && beforeZero != null) {
+                        if (afterZero.getScore() < Math.abs(beforeZero.getScore())) {
+                            bestNets.add((EvolvingNeuralNet) afterZero.getNet());
+                        } else {
+                            bestNets.add((EvolvingNeuralNet) beforeZero.getNet());
+                        }
+                    } else if (afterZero != null) {
+                        bestNets.add((EvolvingNeuralNet) afterZero.getNet());
+                    }
+
+                    break;
+                default:
+                    throw new RuntimeException("Neural Net Evolver did not recognize score sorting method.");
+            }
         }
         scoredNets.clear();
 

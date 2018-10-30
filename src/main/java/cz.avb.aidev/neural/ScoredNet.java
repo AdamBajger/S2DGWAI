@@ -25,6 +25,10 @@ public class ScoredNet implements Comparable<ScoredNet> {
         return net;
     }
 
+    public double getScore() {
+        return score;
+    }
+
     @Override
     public int compareTo(ScoredNet o) {
         double diff = (this.score - o.score);

@@ -3,7 +3,8 @@ package cz.avb.aidev;
 
 import cz.avb.aidev.neural.CDDMNN;
 import cz.avb.aidev.neural.DataVector;
-import cz.avb.aidev.neural.NeuralNet;
+import cz.avb.aidev.neural.EvolvingNeuralNet;
+import cz.avb.aidev.neural.NeuralNetEvolver;
 import org.jblas.DoubleMatrix;
 import org.jblas.MatrixFunctions;
 import org.newdawn.slick.AppGameContainer;
@@ -46,9 +47,28 @@ public class Main {
 
 
 
-        NeuralNet net = new CDDMNN(2, 1, 2, 5);
+        EvolvingNeuralNet net = new CDDMNN(2, 1, 2, 5);
         System.out.println(Arrays.toString(net.getOutputForInput(new DataVector(5, 6))));
         //printMatrix(DoubleMatrix.rand(5, 2));
+
+        NeuralNetEvolver nne = new NeuralNetEvolver(net, neuralNet -> {
+            int[] trainingData = new int[]{1, 2, 3, 4, 10, 15, 16, 18, 55, 6468, 8746, 31584, 321514, 321515,
+                    321516, 321517, 321518, 321519, 321520, 56, 57, 58, 59, 60, 61, 62, 63, 88, 89, 92, 93, 94,
+                    1222, 1223, 1224, 1225, 1226, 1227, 1228, 1229, 1230, 1231, 1232, 1234, 1235, 1236, 1237, 1238,
+                    1239, 1240, 1241, 1242, 1243, 1244, 1245, 1246, 1247, 1248, 1249, 1250};
+            double score = 0d;
+            int desiredResult;
+            double netResult;
+            for (int data1 : trainingData) {
+                for (int data2 : trainingData) {
+                    desiredResult = (data1 + data2) % 1000;
+                    netResult = neuralNet.getOutputForInput(new DataVector(data1, data2))[0];
+                    score += Math.abs((double)desiredResult - netResult);
+                }
+            }
+            return score;
+        }, 3, new double[]{0.00001, 0.0001, 0.0002, 0.005, 0.01, 0.1, 0.5, 1, 2, 5, 20});
+
 
 
     }
